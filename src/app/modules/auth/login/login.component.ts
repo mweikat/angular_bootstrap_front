@@ -1,6 +1,7 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { CustomvalidationService } from '@services/customvalidation.service';
+import { Subscription } from 'rxjs';
 import { LoginModel } from 'src/app/core/models/login.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 
@@ -9,7 +10,7 @@ import { AuthService } from 'src/app/core/services/auth.service';
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss']
 })
-export class LoginComponent implements OnInit{
+export class LoginComponent implements OnInit, OnDestroy{
 
   
   //password input
@@ -25,14 +26,21 @@ export class LoginComponent implements OnInit{
     password: ['',Validators.required]
   });
 
+  destroyloginMsg?: Subscription;
+
   constructor(private fb:FormBuilder,readonly authService:AuthService,private customValidator:CustomvalidationService) { }
+  
+  ngOnDestroy(): void {
+    if (this.destroyloginMsg) {
+      this.destroyloginMsg.unsubscribe();
+    }
+  }
 
   ngOnInit(): void {
     this.isLoggedIn();
-    this.authService.currentToken.subscribe(user =>{
-      if(user == '401'){
-        this.msg="Email o contraseña inválidas";
-      }
+    this.destroyloginMsg = this.authService.currentLoginMsg.subscribe(responseItem =>{
+      
+        this.msg=responseItem.msg;
     
     });
   }

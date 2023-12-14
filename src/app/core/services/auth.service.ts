@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, Observable, Subject } from 'rxjs';
 import { LoginModel } from '../models/login.model';
 import { UserModel } from '../models/user.model';
 import { environment } from 'src/environments/environment';
@@ -15,8 +15,10 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
 
   private readonly URL = environment.apiAuth;
-  private readonly token$: BehaviorSubject<any> = new BehaviorSubject( {} as any);
-  public readonly currentToken: Observable<any> = this.token$.asObservable();
+  //private readonly token$: BehaviorSubject<any> = new BehaviorSubject( {} as any);
+  //public readonly currentToken: Observable<any> = this.token$.asObservable();
+  private readonly msg$: Subject<any> = new Subject();
+  public readonly currentLoginMsg: Observable<any> = this.msg$.asObservable();
 
   constructor(private httpClient:HttpClient, 
               private router:Router, 
@@ -32,11 +34,8 @@ export class AuthService {
             
     },err => {
             
-        if(err.status===401){
-          this.token$.next("401");
-          
-        }
-          
+        this.msg$.next(err.error);
+            
       }
     )
   }

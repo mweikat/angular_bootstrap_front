@@ -1,6 +1,10 @@
-# MiPrimerProyectoAngular
+# Angular_bootstrap_front
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 15.0.4.
+
+## Install proyect
+
+Run `git clone https://github.com/angular/angular-cli` then run `npm install`. The application will be installed.
 
 ## Development server
 
