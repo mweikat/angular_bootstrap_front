@@ -7,5 +7,6 @@ export interface UserModel {
     email_verified_at:string,
     password:string,
     password_confirmation:string,
+    captcha:string
 
 }

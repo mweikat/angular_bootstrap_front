@@ -1,15 +1,17 @@
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UserModel } from 'src/app/core/models/user.model';
 import { AuthService } from 'src/app/core/services/auth.service';
 import { CustomvalidationService } from 'src/app/core/services/customvalidation.service';
+import { ReCaptchaV3Service } from 'ng-recaptcha';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent {
+export class RegisterComponent implements OnInit{
 
   @ViewChild('passwordInput') passwordInput:ElementRef|any;
   @ViewChild('passwordInput_confirm') passwordInput_confirm:ElementRef|any;
@@ -17,6 +19,7 @@ export class RegisterComponent {
   isShowing:boolean = false;
   showValidationErrors:boolean = false;
   msgErrorS:string = '';
+  private recaptchaExecute: Subscription | undefined;
 
   formRegister = new FormGroup({
     name: new FormControl('',[Validators.required,Validators.maxLength(50)]),
@@ -28,7 +31,18 @@ export class RegisterComponent {
 
   userModel:UserModel|any = {} as UserModel;
 
-  constructor(private readonly authService:AuthService, private customValidator:CustomvalidationService,) { }
+  constructor(private readonly authService:AuthService, 
+    private customValidator:CustomvalidationService,
+    private recaptchaV3Service: ReCaptchaV3Service) { }
+
+  ngOnInit(): void {
+    //show recaptcha
+    const element = document.getElementsByClassName('grecaptcha-badge')[0] as HTMLElement;
+    console.log('element ', element);
+    if (element) {
+      element.style.visibility = 'visible';
+    }
+  }
 
   register(){
 
@@ -41,27 +55,43 @@ export class RegisterComponent {
     if (this.formRegister.valid) {
       
 
-      this.userModel.name = this.formRegister.value.name;
-      this.userModel.last_name = this.formRegister.value.lastName;
-      this.userModel.email = this.formRegister.value.email;
-      this.userModel.password = this.formRegister.value.password;
-      this.userModel.password_confirmation = this.formRegister.value.password;
-
-      this.authService.register(this.userModel).subscribe(receivedItem => {
-
-        //si el server envía algún dato
-        console.log(receivedItem);
-            
-      },(error) => {
-
-        if(error.error.email!=undefined){
-
-        }
-          
-      });
+      this.executeAction("Registro_de_Usuario");      
+      
       this.showValidationErrors = false;
     }else
       this.showValidationErrors = true;
+  }
+
+  private executeAction(action: string): void {
+
+    if (this.recaptchaExecute) {
+      this.recaptchaExecute.unsubscribe();
+    }
+
+    this.recaptchaV3Service.execute(action).subscribe((token)=>{
+
+        this.userModel.captcha = token;
+        
+        this.userModel.name = this.formRegister.value.name;
+        this.userModel.last_name = this.formRegister.value.lastName;
+        this.userModel.email = this.formRegister.value.email;
+        this.userModel.password = this.formRegister.value.password;
+        this.userModel.password_confirmation = this.formRegister.value.password;
+
+        this.authService.register(this.userModel).subscribe(receivedItem => {
+
+                      
+        },(error) => {
+
+          if(error.error.email!=undefined){
+  
+          }
+            
+        });
+    },
+    (error) => {
+      console.log(error);
+    })
   }
 
   showPass(){

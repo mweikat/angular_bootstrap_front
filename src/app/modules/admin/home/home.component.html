@@ -1,1 +1,69 @@
-<p>home works!</p>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Inicio</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Enlace 1</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#">Enlace 2</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ml-auto">
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            <i class="fas fa-user-circle"></i> Usuario
+          </a>
+          <div class="dropdown-menu" aria-labelledby="userDropdown">
+            <a class="dropdown-item" href="#">Mi Perfil</a>
+            <a class="dropdown-item" href="#">Cambio de Contraseña</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="#">Cerrar Sesión</a>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+  
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Menú izquierdo -->
+      <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block bg-light sidebar">
+        <div class="sidebar-sticky">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link active" href="#">
+                <i class="fas fa-home"></i>
+                Dashboard
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-file"></i>
+                Página 1
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">
+                <i class="fas fa-cogs"></i>
+                Configuración
+              </a>
+            </li>
+          </ul>
+        </div>
+      </nav>
+  
+      <!-- Contenido principal -->
+      <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-md-4">
+        <!-- Tu contenido principal va aquí -->
+        <h2>Contenido Principal</h2>
+        <router-outlet></router-outlet>
+      </main>
+    </div>
+  </div>
+

@@ -6,9 +6,6 @@ import { LoginModel } from '../models/login.model';
 import { UserModel } from '../models/user.model';
 import { environment } from 'src/environments/environment';
 
-
-
-
 @Injectable({
   providedIn: 'root'
 })
@@ -49,10 +46,9 @@ export class AuthService {
 
   isLoggedIn() { 
 
-    if(localStorage.getItem('access_token')!=null)
-      return true;
-    else
-      return false;
+    if(localStorage.getItem('access_token')!=null){
+      this.goAdminPage();
+    }
   }
 
   getToken(){
@@ -60,18 +56,18 @@ export class AuthService {
     return JSON.parse(userStorage!).access_token;
   }
 
-  goAdminPage(){
+  private goAdminPage(){
     this.router.navigate(['/admin']);
-  }
-
-  private goLoginPage(){
-    this.router.navigate(['/auth/login']);
   }
 
   register(user:UserModel){
 
     return this.httpClient.post(`${this.URL}/register`,user,{observe: 'response', responseType: 'json'});
 
+  }
+
+  private goLoginPage(){
+    this.router.navigate(['/auth/login']);
   }
 
 }

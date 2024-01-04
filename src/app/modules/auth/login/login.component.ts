@@ -61,9 +61,7 @@ export class LoginComponent implements OnInit, OnDestroy{
   }
 
   isLoggedIn(){
-    if(this.authService.isLoggedIn())
-      this.authService.goAdminPage();
-   
+    this.authService.isLoggedIn()
   }
 
   showPass(){
